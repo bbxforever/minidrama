@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Drama {
+  id          Int      @id @default(autoincrement())
+  title       String
+  titleEn     String?
+  description String?
+  descriptionEn String?
+  coverUrl    String?
+  category    String
+  language    String   @default("zh")
+  status      String   @default("ongoing") // ongoing | completed
+  youtubeChannelId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  episodes    Episode[]
+  tags        DramaTag[]
+}
+
+model Episode {
+  id          Int      @id @default(autoincrement())
+  dramaId     Int
+  episode     Int
+  title       String?
+  youtubeId   String   @unique
+  duration    Int?
+  createdAt   DateTime @default(now())
+  drama       Drama    @relation(fields: [dramaId], references: [id], onDelete: Cascade)
+}
+
+model Tag {
+  id     Int        @id @default(autoincrement())
+  name   String     @unique
+  nameEn String?
+  dramas DramaTag[]
+}
+
+model DramaTag {
+  dramaId Int
+  tagId   Int
+  drama   Drama @relation(fields: [dramaId], references: [id], onDelete: Cascade)
+  tag     Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  @@id([dramaId, tagId])
+}
