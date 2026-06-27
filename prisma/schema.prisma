@@ -16,7 +16,7 @@ model Drama {
   category    String
   language    String   @default("zh")
   status      String   @default("ongoing") // ongoing | completed
-  youtubeChannelId String?
+  youtubeChannelId String? @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   episodes    Episode[]
