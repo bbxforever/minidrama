@@ -15,14 +15,11 @@ const CATEGORY_LABELS: Record<string, string> = {
 }
 
 export default function DramaCard({ id, title, coverUrl, category, episodeCount, status }: Props) {
+  const cover = `/api/cover/${id}`
   return (
     <Link href={`/drama/${id}`} className="group block rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
       <div className="relative aspect-[9/16] bg-gray-100">
-        {coverUrl ? (
-          <Image src={coverUrl} alt={title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center text-gray-300 text-5xl">🎬</div>
-        )}
+        <Image src={cover} alt={title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
         <div className="absolute top-2 left-2 bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full font-medium shadow">
           {CATEGORY_LABELS[category] ?? category}
         </div>
