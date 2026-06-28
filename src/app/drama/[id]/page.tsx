@@ -2,6 +2,7 @@ import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import AdBanner from '@/components/AdBanner'
 
 export const dynamic = 'force-dynamic'
 
@@ -63,10 +64,7 @@ export default async function DramaPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
-      {/* 广告位 */}
-      <div className="w-full h-16 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-300 text-sm mb-6 shadow-sm">
-        Advertisement
-      </div>
+      <AdBanner />
 
       {/* 选集 */}
       <div className="bg-white rounded-2xl shadow-sm p-5">

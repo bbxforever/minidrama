@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import AdBanner from '@/components/AdBanner'
 
 export const dynamic = 'force-dynamic'
 
@@ -28,10 +29,7 @@ export default async function PlayPage({ params }: { params: Promise<{ id: strin
         <span className="text-gray-700">第 {episode.episode} 集</span>
       </div>
 
-      {/* 广告位 - 播放前 */}
-      <div className="w-full h-14 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-300 text-sm mb-4 shadow-sm">
-        Advertisement
-      </div>
+      <AdBanner />
 
       {/* 播放器 */}
       <div className="relative w-full aspect-[9/16] bg-black rounded-2xl overflow-hidden shadow-lg mb-4">
@@ -69,10 +67,7 @@ export default async function PlayPage({ params }: { params: Promise<{ id: strin
         ) : <div className="flex-1" />}
       </div>
 
-      {/* 广告位 - 播放后 */}
-      <div className="w-full h-20 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-300 text-sm mb-5 shadow-sm">
-        Advertisement
-      </div>
+      <AdBanner />
 
       {/* 选集列表 */}
       <div className="bg-white rounded-2xl shadow-sm p-4">

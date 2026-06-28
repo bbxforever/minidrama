@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db'
 import DramaCard from '@/components/DramaCard'
+import AdBanner from '@/components/AdBanner'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
@@ -36,10 +37,7 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* Ad Banner */}
-      <div className="w-full h-16 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-300 text-sm mb-8 shadow-sm">
-        Advertisement
-      </div>
+      <AdBanner />
 
       {/* Drama Grid */}
       <div className="flex items-center justify-between mb-4">
