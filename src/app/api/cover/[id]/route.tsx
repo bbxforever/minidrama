@@ -3,6 +3,12 @@ import { prisma } from '@/lib/db'
 
 export const runtime = 'nodejs'
 
+async function loadFont() {
+  const url = 'https://fonts.gstatic.com/s/notosanssc/v36/k3kCo84MPvpLmixcA63oeAL7Iqp5IZJF9bmaG9_FnYxNbPzS5HE.woff'
+  const res = await fetch(url)
+  return res.arrayBuffer()
+}
+
 const GRADIENTS: Record<string, [string, string]> = {
   romance:   ['#f43f5e', '#fb7185'],
   historical:['#92400e', '#d97706'],
@@ -28,6 +34,7 @@ export async function GET(
   const category = drama?.category ?? 'romance'
   const [from, to] = GRADIENTS[category] ?? GRADIENTS.romance
   const catLabel = CATEGORY_ZH[category] ?? category
+  const fontData = await loadFont()
 
   return new ImageResponse(
     (
@@ -42,6 +49,7 @@ export async function GET(
           background: `linear-gradient(160deg, ${from} 0%, ${to} 100%)`,
           padding: '0',
           position: 'relative',
+          fontFamily: 'NotoSansSC',
         }}
       >
         {/* 装饰圆 */}
@@ -117,6 +125,7 @@ export async function GET(
     {
       width: 360,
       height: 640,
+      fonts: [{ name: 'NotoSansSC', data: fontData, weight: 700 }],
     }
   )
 }
