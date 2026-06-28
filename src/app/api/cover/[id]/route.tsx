@@ -8,7 +8,8 @@ export const runtime = 'nodejs'
 let fontCache: ArrayBuffer | null = null
 async function loadFont(): Promise<ArrayBuffer> {
   if (fontCache) return fontCache
-  const fontPath = join(process.cwd(), 'src/fonts/NotoSansSC-Bold.ttf')
+  // public/ 目录在 Vercel 上通过 process.cwd() + /public 访问
+  const fontPath = join(process.cwd(), 'public', 'fonts', 'NotoSansSC-Bold.ttf')
   const buf = await readFile(fontPath)
   fontCache = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer
   return fontCache
