@@ -15,7 +15,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 }
 
 export default function DramaCard({ id, title, coverUrl, category, episodeCount, status }: Props) {
-  const cover = `/api/cover/${id}`
+  const cover = `/api/cover/${id}?v=2`
   return (
     <Link href={`/drama/${id}`} className="group block rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
       <div className="relative aspect-[9/16] bg-gray-100">
