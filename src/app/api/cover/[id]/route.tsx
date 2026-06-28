@@ -1,12 +1,17 @@
 import { ImageResponse } from 'next/og'
 import { prisma } from '@/lib/db'
+import { readFile } from 'fs/promises'
+import { join } from 'path'
 
 export const runtime = 'nodejs'
 
-async function loadFont() {
-  const url = 'https://fonts.gstatic.com/s/notosanssc/v36/k3kCo84MPvpLmixcA63oeAL7Iqp5IZJF9bmaG9_FnYxNbPzS5HE.woff'
-  const res = await fetch(url)
-  return res.arrayBuffer()
+let fontCache: ArrayBuffer | null = null
+async function loadFont(): Promise<ArrayBuffer> {
+  if (fontCache) return fontCache
+  const fontPath = join(process.cwd(), 'src/fonts/NotoSansSC-Bold.ttf')
+  const buf = await readFile(fontPath)
+  fontCache = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer
+  return fontCache
 }
 
 const GRADIENTS: Record<string, [string, string]> = {
