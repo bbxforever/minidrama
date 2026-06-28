@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 
@@ -17,6 +18,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${geist.className} bg-gray-50 text-gray-900 min-h-screen`}>
         <Navbar />
         <main className="max-w-7xl mx-auto px-4 py-6">{children}</main>
+        <Script
+          src="https://pl30104189.effectivecpmnetwork.com/22/a4/63/22a4639fda7b02ba85d8e36e96d68f35.js"
+          strategy="afterInteractive"
+        />
         <footer className="text-center text-gray-400 text-sm py-8 border-t border-gray-200 mt-12 bg-white">
           <p className="font-medium text-gray-500">© 2025 MiniDrama · Free Short Dramas Online</p>
           <div className="flex justify-center gap-6 mt-2">
