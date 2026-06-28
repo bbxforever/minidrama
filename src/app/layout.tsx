@@ -3,6 +3,7 @@ import { Geist } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import Navbar from '@/components/Navbar'
+import AdTopBanner from '@/components/AdTopBanner'
 
 const geist = Geist({ subsets: ['latin'] })
 
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="zh">
       <body className={`${geist.className} bg-gray-50 text-gray-900 min-h-screen`}>
         <Navbar />
+        <AdTopBanner />
         <main className="max-w-7xl mx-auto px-4 py-6">{children}</main>
         <Script
           src="https://pl30104189.effectivecpmnetwork.com/22/a4/63/22a4639fda7b02ba85d8e36e96d68f35.js"
