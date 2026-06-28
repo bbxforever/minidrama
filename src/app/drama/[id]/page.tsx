@@ -33,7 +33,7 @@ export default async function DramaPage({ params }: { params: Promise<{ id: stri
         <div className="flex flex-col md:flex-row gap-6">
           <div className="w-full md:w-40 shrink-0">
             <div className="relative aspect-[9/16] rounded-xl overflow-hidden bg-gray-100 shadow">
-              <Image src={`/api/cover/${drama.id}?v=2`} alt={drama.title} fill className="object-cover" />
+              <Image src={`/api/cover/${drama.id}?v=2`} alt={drama.title} fill unoptimized className="object-cover" />
             </div>
           </div>
           <div className="flex-1">
