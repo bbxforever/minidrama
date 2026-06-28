@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
+import { Noto_Sans_SC } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import AdTopBanner from '@/components/AdTopBanner'
 
-const geist = Geist({ subsets: ['latin'] })
+const notoSansSC = Noto_Sans_SC({ subsets: ['latin'], weight: ['400', '500', '700'] })
 
 export const metadata: Metadata = {
   title: 'MiniDrama - Free Chinese Short Dramas Online | 免费短剧在线看',
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh">
-      <body className={`${geist.className} bg-gray-50 text-gray-900 min-h-screen`}>
+      <body className={`${notoSansSC.className} bg-gray-50 text-gray-900 min-h-screen`}>
         <Navbar />
         <AdTopBanner />
         <main className="max-w-7xl mx-auto px-4 py-6">{children}</main>
