@@ -56,7 +56,7 @@ export default function CoverImage({ title, category, className = '' }: Props) {
 
       {/* 分类标签 */}
       <rect x="12" y="218" width={catLabel.length * 16 + 16} height="22" rx="11" fill="white" fillOpacity="0.25" />
-      <text x="20" y="233" fontSize="12" fill="white" fontWeight="600" fontFamily="system-ui, sans-serif">{catLabel}</text>
+      <text x="20" y="233" fontSize="12" fill="white" fontWeight="600" fontFamily='"Microsoft YaHei", "PingFang SC", "Noto Sans SC", system-ui, sans-serif'>{catLabel}</text>
 
       {/* 剧名 */}
       <text
@@ -64,14 +64,14 @@ export default function CoverImage({ title, category, className = '' }: Props) {
         fontSize={fontSize}
         fill="white"
         fontWeight="700"
-        fontFamily="system-ui, -apple-system, sans-serif"
+        fontFamily='"Microsoft YaHei", "PingFang SC", "Noto Sans SC", system-ui, sans-serif'
         style={{ filter: 'drop-shadow(0 1px 4px rgba(0,0,0,0.4))' }}
       >
         {title}
       </text>
 
       {/* 品牌 */}
-      <text x="12" y="305" fontSize="11" fill="white" fillOpacity="0.55" fontFamily="system-ui, sans-serif">MiniDrama</text>
+      <text x="12" y="305" fontSize="11" fill="white" fillOpacity="0.55" fontFamily='"Microsoft YaHei", "PingFang SC", "Noto Sans SC", system-ui, sans-serif'>MiniDrama</text>
     </svg>
   )
 }
