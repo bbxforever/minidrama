@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import AdBanner from '@/components/AdBanner'
+import AdSquare from '@/components/AdSquare'
 
 export const dynamic = 'force-dynamic'
 
@@ -65,6 +66,8 @@ export default async function DramaPage({ params }: { params: Promise<{ id: stri
       </div>
 
       <AdBanner />
+
+      <AdSquare />
 
       {/* 选集 */}
       <div className="bg-white rounded-2xl shadow-sm p-5">

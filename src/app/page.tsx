@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db'
 import DramaCard from '@/components/DramaCard'
 import AdBanner from '@/components/AdBanner'
+import AdSquare from '@/components/AdSquare'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
@@ -58,6 +59,7 @@ export default async function HomePage() {
               category={d.category} episodeCount={d._count.episodes} status={d.status} />
           ))}
         </div>
+        <AdSquare />
       )}
     </div>
   )
