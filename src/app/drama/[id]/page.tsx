@@ -1,9 +1,9 @@
 import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import AdBanner from '@/components/AdBanner'
 import AdSquare from '@/components/AdSquare'
+import CoverImage from '@/components/CoverImage'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,7 +33,7 @@ export default async function DramaPage({ params }: { params: Promise<{ id: stri
         <div className="flex flex-col md:flex-row gap-6">
           <div className="w-full md:w-40 shrink-0">
             <div className="relative aspect-[9/16] rounded-xl overflow-hidden bg-gray-100 shadow">
-              <Image src={`/api/cover/${drama.id}?v=2`} alt={drama.title} fill unoptimized className="object-cover" />
+              <CoverImage title={drama.title} category={drama.category} className="rounded-xl" />
             </div>
           </div>
           <div className="flex-1">
