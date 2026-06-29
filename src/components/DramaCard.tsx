@@ -18,7 +18,7 @@ export default function DramaCard({ id, title, coverUrl, category, episodeCount,
   return (
     <Link href={`/drama/${id}`} className="group block rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
       <div className="relative aspect-[9/16] bg-gray-100">
-        <CoverImage title={title} category={category} />
+        <CoverImage title={title} category={category} coverUrl={coverUrl} />
         <div className="absolute top-2 left-2 bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full font-medium shadow">
           {CATEGORY_LABELS[category] ?? category}
         </div>

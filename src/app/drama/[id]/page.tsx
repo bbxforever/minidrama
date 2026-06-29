@@ -60,7 +60,7 @@ export default async function DramaPage({ params }: { params: Promise<{ id: stri
         <div className="flex flex-col md:flex-row gap-6">
           <div className="w-full md:w-40 shrink-0">
             <div className="relative aspect-[9/16] rounded-xl overflow-hidden bg-gray-100 shadow">
-              <CoverImage title={drama.title} category={drama.category} className="rounded-xl" />
+              <CoverImage title={drama.title} category={drama.category} coverUrl={drama.coverUrl} className="rounded-xl" />
             </div>
           </div>
           <div className="flex-1">
