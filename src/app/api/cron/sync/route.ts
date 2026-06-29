@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
-import { fetchChannelVideos, fetchVideoDetails, parseDuration } from '@/lib/youtube'
+import { fetchChannelVideos, fetchChannelInfo, fetchVideoDetails, parseDuration } from '@/lib/youtube'
 
 export const maxDuration = 300
 
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
   const allDramas = await prisma.drama.findMany({
     where: { youtubeChannelId: { not: null } },
-    select: { id: true, title: true, youtubeChannelId: true },
+    select: { id: true, title: true, youtubeChannelId: true, description: true, coverUrl: true },
     orderBy: { id: 'asc' },
   })
 
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
     // 默认取最久未更新的 5 个
     const staleDramas = await prisma.drama.findMany({
       where: { youtubeChannelId: { not: null } },
-      select: { id: true, title: true, youtubeChannelId: true },
+      select: { id: true, title: true, youtubeChannelId: true, description: true, coverUrl: true },
       orderBy: { updatedAt: 'asc' },
       take: BATCH_SIZE,
     })
@@ -41,8 +41,26 @@ export async function GET(req: NextRequest) {
 
   for (const drama of dramas) {
     try {
-      const videos = await fetchChannelVideos(drama.youtubeChannelId!, 30)
-      if (!videos.length) { results.push({ title: drama.title, synced: 0 }); continue }
+      // 并行拉频道信息 + 视频列表
+      const [channelInfo, videos] = await Promise.all([
+        fetchChannelInfo(drama.youtubeChannelId!),
+        fetchChannelVideos(drama.youtubeChannelId!, 30),
+      ])
+
+      // 更新频道描述和封面（只在字段为空时覆盖，避免覆盖手动填写的内容）
+      const dramaUpdate: Record<string, unknown> = { updatedAt: new Date() }
+      if (channelInfo?.description && !drama.description) {
+        dramaUpdate.description = channelInfo.description.slice(0, 1000)
+      }
+      if (channelInfo?.thumbnailUrl && !drama.coverUrl) {
+        dramaUpdate.coverUrl = channelInfo.thumbnailUrl
+      }
+
+      if (!videos.length) {
+        await prisma.drama.update({ where: { id: drama.id }, data: dramaUpdate })
+        results.push({ title: drama.title, synced: 0 })
+        continue
+      }
 
       const videoIds = videos.map((v: { id: { videoId: string } }) => v.id.videoId)
       const details = await fetchVideoDetails(videoIds)
@@ -64,7 +82,7 @@ export async function GET(req: NextRequest) {
         synced++
       }
 
-      await prisma.drama.update({ where: { id: drama.id }, data: { updatedAt: new Date() } })
+      await prisma.drama.update({ where: { id: drama.id }, data: dramaUpdate })
       results.push({ title: drama.title, synced })
     } catch (e) {
       results.push({ title: drama.title, synced: 0, error: String(e) })
