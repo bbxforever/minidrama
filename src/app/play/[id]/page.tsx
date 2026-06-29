@@ -100,7 +100,7 @@ export default async function PlayPage({ params }: { params: Promise<{ id: strin
           选集
           <span className="ml-2 text-sm font-normal text-gray-400">第 {episode.episode}/{drama.episodes.length} 集</span>
         </h3>
-        <div className="grid grid-cols-8 sm:grid-cols-10 gap-2 max-h-48 overflow-y-auto pr-1">
+        <div className="grid grid-cols-6 sm:grid-cols-10 gap-2 max-h-48 overflow-y-auto pr-1">
           {drama.episodes.map(ep => (
             <Link key={ep.id} href={`/play/${ep.id}`}
               className={`aspect-square flex items-center justify-center rounded-lg text-sm font-medium transition-colors border

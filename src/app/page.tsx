@@ -37,14 +37,14 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
   return (
     <div>
       {/* Hero Banner */}
-      <div className="relative bg-gradient-to-r from-rose-500 to-pink-400 rounded-2xl px-8 py-10 mb-8 overflow-hidden">
+      <div className="relative bg-gradient-to-r from-rose-500 to-pink-400 rounded-2xl px-5 sm:px-8 py-7 sm:py-10 mb-6 sm:mb-8 overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_70%_50%,white,transparent)]" />
-        <h1 className="text-3xl font-bold text-white mb-2">短剧免费看 🎬</h1>
-        <p className="text-rose-100 mb-5">精选爱情·古装·都市短剧，随时随地畅享</p>
-        <div className="flex gap-3 flex-wrap">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1.5">短剧免费看 🎬</h1>
+        <p className="text-rose-100 text-sm sm:text-base mb-4 sm:mb-5">精选爱情·古装·都市短剧，随时随地畅享</p>
+        <div className="flex gap-2 sm:gap-3 flex-wrap">
           {CATEGORIES.slice(1).map(c => (
             <Link key={c.key} href={`/category/${c.key}`}
-              className="px-4 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-sm font-medium transition-colors backdrop-blur-sm">
+              className="px-3 sm:px-4 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-sm font-medium transition-colors backdrop-blur-sm">
               {c.label}
               {countMap[c.key] ? <span className="ml-1 opacity-70 text-xs">({countMap[c.key]})</span> : null}
             </Link>
@@ -78,11 +78,11 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
 
           {/* 分页 */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-8">
+            <div className="flex items-center justify-center gap-1.5 sm:gap-2 mt-8 flex-wrap">
               {page > 1 && (
                 <Link href={`/?page=${page - 1}`}
-                  className="px-4 py-2 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-600 hover:border-rose-300 hover:text-rose-500 transition-colors shadow-sm">
-                  ← 上一页
+                  className="px-3 sm:px-4 py-2 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-600 hover:border-rose-300 hover:text-rose-500 transition-colors shadow-sm">
+                  ← 上页
                 </Link>
               )}
 
@@ -110,8 +110,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
 
               {page < totalPages && (
                 <Link href={`/?page=${page + 1}`}
-                  className="px-4 py-2 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-600 hover:border-rose-300 hover:text-rose-500 transition-colors shadow-sm">
-                  下一页 →
+                  className="px-3 sm:px-4 py-2 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-600 hover:border-rose-300 hover:text-rose-500 transition-colors shadow-sm">
+                  下页 →
                 </Link>
               )}
             </div>

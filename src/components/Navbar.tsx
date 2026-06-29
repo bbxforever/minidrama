@@ -70,10 +70,10 @@ export default function Navbar() {
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-6">
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg text-rose-500 shrink-0">
-          <Tv size={22} />
-          MiniDrama
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 h-14 flex items-center gap-3 sm:gap-6">
+        <Link href="/" className="flex items-center gap-1.5 font-bold text-base sm:text-lg text-rose-500 shrink-0">
+          <Tv size={20} />
+          <span>MiniDrama</span>
         </Link>
 
         <div className="hidden md:flex gap-1 text-sm">
@@ -86,7 +86,7 @@ export default function Navbar() {
         </div>
 
         {/* 搜索框 + 下拉 */}
-        <div ref={wrapperRef} className="ml-auto relative">
+        <div ref={wrapperRef} className="ml-auto relative flex-1 md:flex-none md:w-64">
           <form onSubmit={handleSubmit}
             className="flex items-center bg-gray-100 hover:bg-gray-200 rounded-full overflow-hidden transition-colors">
             <input
@@ -96,7 +96,7 @@ export default function Navbar() {
               onKeyDown={handleKeyDown}
               onFocus={() => suggestions.length && setOpen(true)}
               placeholder="搜索短剧..."
-              className="bg-transparent px-4 py-2 text-sm outline-none w-44 md:w-56 placeholder-gray-400 text-gray-700"
+              className="bg-transparent px-3 sm:px-4 py-2 text-sm outline-none flex-1 min-w-0 placeholder-gray-400 text-gray-700"
             />
             {q && (
               <button type="button" onClick={() => { setQ(''); setSuggestions([]); setOpen(false); inputRef.current?.focus() }}

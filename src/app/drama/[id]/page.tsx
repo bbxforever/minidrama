@@ -99,7 +99,7 @@ export default async function DramaPage({ params }: { params: Promise<{ id: stri
       {/* 选集 */}
       <div className="bg-white rounded-2xl shadow-sm p-5">
         <h2 className="text-base font-bold text-gray-800 mb-4">选集</h2>
-        <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 gap-2">
+        <div className="grid grid-cols-5 sm:grid-cols-10 md:grid-cols-12 gap-2">
           {drama.episodes.map(ep => (
             <Link key={ep.id} href={`/play/${ep.id}`}
               className="aspect-square flex items-center justify-center rounded-lg text-sm font-medium bg-gray-50 hover:bg-rose-500 hover:text-white text-gray-700 border border-gray-100 transition-colors">

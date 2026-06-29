@@ -28,7 +28,7 @@ export default function AdTopBanner() {
   }, [])
 
   return (
-    <div className="flex justify-center py-2 bg-white border-b border-gray-100 min-h-[94px]">
+    <div className="hidden md:flex justify-center py-2 bg-white border-b border-gray-100 min-h-[94px]">
       <div ref={ref} style={{ width: 728, height: 90 }} />
     </div>
   )
