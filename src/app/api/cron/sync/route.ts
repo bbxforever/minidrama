@@ -2,25 +2,46 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { fetchChannelVideos, fetchVideoDetails, parseDuration } from '@/lib/youtube'
 
-export const maxDuration = 300 // Pro plan: up to 300s
+export const maxDuration = 300
 
-// Vercel Cron Job — runs daily at 02:00 UTC
+// 每次最多同步 5 个频道，用 batch 参数轮转（0=第1批, 1=第2批...）
+const BATCH_SIZE = 5
+
 export async function GET(req: NextRequest) {
   const auth = req.headers.get('authorization')
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const dramas = await prisma.drama.findMany({
+  const batchParam = req.nextUrl.searchParams.get('batch')
+
+  const allDramas = await prisma.drama.findMany({
     where: { youtubeChannelId: { not: null } },
-    select: { id: true, title: true, category: true, youtubeChannelId: true },
+    select: { id: true, title: true, youtubeChannelId: true },
+    orderBy: { id: 'asc' },
   })
+
+  // 自动计算批次：按 updatedAt 最旧的先同步
+  let dramas = allDramas
+  if (batchParam !== null) {
+    const batch = parseInt(batchParam) || 0
+    dramas = allDramas.slice(batch * BATCH_SIZE, (batch + 1) * BATCH_SIZE)
+  } else {
+    // 默认取最久未更新的 5 个
+    const staleDramas = await prisma.drama.findMany({
+      where: { youtubeChannelId: { not: null } },
+      select: { id: true, title: true, youtubeChannelId: true },
+      orderBy: { updatedAt: 'asc' },
+      take: BATCH_SIZE,
+    })
+    dramas = staleDramas
+  }
 
   const results: { title: string; synced: number; error?: string }[] = []
 
   for (const drama of dramas) {
     try {
-      const videos = await fetchChannelVideos(drama.youtubeChannelId!, 50)
+      const videos = await fetchChannelVideos(drama.youtubeChannelId!, 30)
       if (!videos.length) { results.push({ title: drama.title, synced: 0 }); continue }
 
       const videoIds = videos.map((v: { id: { videoId: string } }) => v.id.videoId)
@@ -52,5 +73,11 @@ export async function GET(req: NextRequest) {
 
   const total = results.reduce((s, r) => s + r.synced, 0)
   console.log(`[cron/sync] ${dramas.length} channels, ${total} new episodes`)
-  return NextResponse.json({ ok: true, channels: dramas.length, totalSynced: total, results })
+  return NextResponse.json({
+    ok: true,
+    channels: dramas.length,
+    totalSynced: total,
+    totalChannels: allDramas.length,
+    results,
+  })
 }
