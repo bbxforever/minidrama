@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { fetchChannelVideos, fetchVideoDetails, parseDuration } from '@/lib/youtube'
 
+export const maxDuration = 300 // Pro plan: up to 300s
+
 // Vercel Cron Job — runs daily at 02:00 UTC
-// Authorization: Vercel automatically sends CRON_SECRET in Authorization header
 export async function GET(req: NextRequest) {
   const auth = req.headers.get('authorization')
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
