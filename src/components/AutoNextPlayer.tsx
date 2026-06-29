@@ -11,7 +11,8 @@ interface Props {
 
 declare global {
   interface Window {
-    YT: typeof YT
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    YT: any
     onYouTubeIframeAPIReady: () => void
   }
 }
@@ -19,7 +20,7 @@ declare global {
 export default function AutoNextPlayer({ youtubeId, nextId, episodeNum, totalEpisodes }: Props) {
   const router = useRouter()
   const playerRef = useRef<HTMLDivElement>(null)
-  const playerInstanceRef = useRef<YT.Player | null>(null)
+  const playerInstanceRef = useRef<any>(null)
   const [countdown, setCountdown] = useState<number | null>(null)
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const cancelledRef = useRef(false)
@@ -59,7 +60,8 @@ export default function AutoNextPlayer({ youtubeId, nextId, episodeNum, totalEpi
         videoId: youtubeId,
         playerVars: { autoplay: 1, rel: 0, modestbranding: 1 },
         events: {
-          onStateChange: (e: YT.OnStateChangeEvent) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onStateChange: (e: any) => {
             if (e.data === window.YT.PlayerState.ENDED) startCountdown()
             if (e.data === window.YT.PlayerState.PLAYING) cancelCountdown()
           },
