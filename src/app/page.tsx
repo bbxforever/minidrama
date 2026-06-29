@@ -15,11 +15,19 @@ const CATEGORIES = [
 ]
 
 export default async function HomePage() {
-  const dramas = await prisma.drama.findMany({
-    take: 24,
-    orderBy: { updatedAt: 'desc' },
-    include: { _count: { select: { episodes: true } } },
-  })
+  const [dramas, categoryCounts] = await Promise.all([
+    prisma.drama.findMany({
+      take: 24,
+      orderBy: { updatedAt: 'desc' },
+      include: { _count: { select: { episodes: true } } },
+    }),
+    prisma.drama.groupBy({
+      by: ['category'],
+      _count: { id: true },
+    }),
+  ])
+
+  const countMap = Object.fromEntries(categoryCounts.map(c => [c.category, c._count.id]))
 
   return (
     <div>
@@ -33,6 +41,7 @@ export default async function HomePage() {
             <Link key={c.key} href={`/category/${c.key}`}
               className="px-4 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-sm font-medium transition-colors backdrop-blur-sm">
               {c.label}
+              {countMap[c.key] ? <span className="ml-1 opacity-70 text-xs">({countMap[c.key]})</span> : null}
             </Link>
           ))}
         </div>
