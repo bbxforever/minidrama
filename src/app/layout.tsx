@@ -5,6 +5,8 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import AdTopBanner from '@/components/AdTopBanner'
 
+const GA_ID = 'G-4K8X9Z0TNC'
+
 const notoSansSC = Noto_Sans_SC({ subsets: ['latin'], weight: ['400', '500', '700'] })
 
 export const metadata: Metadata = {
@@ -32,6 +34,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         <AdTopBanner />
         <main className="max-w-7xl mx-auto px-4 py-6">{children}</main>
+        {/* Google Analytics */}
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+        <Script id="ga-init" strategy="afterInteractive">{`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GA_ID}');
+        `}</Script>
+        {/* Adsterra Popunder */}
         <Script
           src="https://pl30104189.effectivecpmnetwork.com/22/a4/63/22a4639fda7b02ba85d8e36e96d68f35.js"
           strategy="afterInteractive"
