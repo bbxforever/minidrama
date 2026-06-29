@@ -12,7 +12,7 @@ export default function AdSquare() {
     const cfg = document.createElement('script')
     cfg.text = `
       window.atOptions = {
-        'key' : '4bd72f571a17b6bf2d2308e2093cbf38',
+        'key' : '4ebdcc6f81d0ef89d61d7d8de7dcd7bf',
         'format' : 'iframe',
         'height' : 250,
         'width' : 300,
@@ -22,7 +22,7 @@ export default function AdSquare() {
     ref.current.appendChild(cfg)
 
     const invoke = document.createElement('script')
-    invoke.src = 'https://www.highperformanceformat.com/4bd72f571a17b6bf2d2308e2093cbf38/invoke.js'
+    invoke.src = 'https://www.highperformanceformat.com/4ebdcc6f81d0ef89d61d7d8de7dcd7bf/invoke.js'
     invoke.async = true
     ref.current.appendChild(invoke)
   }, [])

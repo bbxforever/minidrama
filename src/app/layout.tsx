@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         `}</Script>
         {/* Adsterra Popunder */}
         <Script
-          src="https://pl30104189.effectivecpmnetwork.com/22/a4/63/22a4639fda7b02ba85d8e36e96d68f35.js"
+          src="https://pl30120825.effectivecpmnetwork.com/2b/f7/80/2bf780bc55a5e04f804b93669fff4a10.js"
           strategy="afterInteractive"
         />
         <footer className="text-center text-gray-400 text-sm py-8 border-t border-gray-200 mt-12 bg-white">

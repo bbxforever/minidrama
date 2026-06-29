@@ -11,19 +11,18 @@ export default function AdTopBanner() {
 
     const cfg = document.createElement('script')
     cfg.text = `
-      var atOptions_728 = {
-        'key' : 'db67c1edb195de8072675d5bd85f1332',
+      window.atOptions = {
+        'key' : '5d3c8a346617fc0ded23ec443ad3970f',
         'format' : 'iframe',
         'height' : 90,
         'width' : 728,
         'params' : {}
       };
-      window.atOptions = atOptions_728;
     `
     ref.current.appendChild(cfg)
 
     const invoke = document.createElement('script')
-    invoke.src = 'https://www.highperformanceformat.com/db67c1edb195de8072675d5bd85f1332/invoke.js'
+    invoke.src = 'https://www.highperformanceformat.com/5d3c8a346617fc0ded23ec443ad3970f/invoke.js'
     invoke.async = true
     ref.current.appendChild(invoke)
   }, [])
