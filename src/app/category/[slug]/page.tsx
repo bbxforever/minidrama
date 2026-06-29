@@ -8,6 +8,8 @@ import AdSquare from '@/components/AdSquare'
 
 export const dynamic = 'force-dynamic'
 
+const PAGE_SIZE = 24
+
 const CATEGORIES: Record<string, { label: string; labelEn: string; emoji: string; color: string }> = {
   romance:    { label: '爱情', labelEn: 'Romance',    emoji: '💕', color: 'from-rose-500 to-pink-400' },
   historical: { label: '古装', labelEn: 'Historical', emoji: '🏯', color: 'from-amber-600 to-yellow-500' },
@@ -34,16 +36,30 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ page?: string }>
+}) {
   const { slug } = await params
+  const { page: pageStr } = await searchParams
   const cat = CATEGORIES[slug]
   if (!cat) notFound()
 
-  const dramas = await prisma.drama.findMany({
-    where: { category: slug },
-    orderBy: { updatedAt: 'desc' },
-    include: { _count: { select: { episodes: true } } },
-  })
+  const page = Math.max(1, parseInt(pageStr ?? '1') || 1)
+  const [dramas, total] = await Promise.all([
+    prisma.drama.findMany({
+      where: { category: slug },
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+      orderBy: { updatedAt: 'desc' },
+      include: { _count: { select: { episodes: true } } },
+    }),
+    prisma.drama.count({ where: { category: slug } }),
+  ])
+  const totalPages = Math.ceil(total / PAGE_SIZE)
 
   return (
     <div>
@@ -54,7 +70,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           <span className="text-4xl">{cat.emoji}</span>
           <h1 className="text-3xl font-bold text-white">{cat.label}短剧</h1>
         </div>
-        <p className="text-white/80 mb-5">{cat.labelEn} · 共 {dramas.length} 部</p>
+        <p className="text-white/80 mb-5">{cat.labelEn} · 共 {total} 部</p>
         {/* 其他分类快捷跳转 */}
         <div className="flex gap-2 flex-wrap">
           {Object.entries(CATEGORIES).filter(([k]) => k !== slug).map(([k, v]) => (
@@ -88,7 +104,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-gray-800">{cat.label}短剧</h2>
-            <span className="text-sm text-gray-400">共 {dramas.length} 部</span>
+            <span className="text-sm text-gray-400">共 {total} 部</span>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {dramas.map(d => (
@@ -97,6 +113,48 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
             ))}
           </div>
           <AdSquare />
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-8">
+              {page > 1 && (
+                <Link href={`/category/${slug}?page=${page - 1}`}
+                  className="px-4 py-2 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-600 hover:border-rose-300 hover:text-rose-500 transition-colors shadow-sm">
+                  ← 上一页
+                </Link>
+              )}
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(p => p === 1 || p === totalPages || Math.abs(p - page) <= 2)
+                .reduce<(number | '...')[]>((acc, p, idx, arr) => {
+                  if (idx > 0 && p - (arr[idx - 1] as number) > 1) acc.push('...')
+                  acc.push(p)
+                  return acc
+                }, [])
+                .map((p, i) =>
+                  p === '...' ? (
+                    <span key={`ellipsis-${i}`} className="px-2 text-gray-400">…</span>
+                  ) : (
+                    <Link key={p} href={p === 1 ? `/category/${slug}` : `/category/${slug}?page=${p}`}
+                      className={`w-9 h-9 flex items-center justify-center rounded-lg text-sm font-medium transition-colors
+                        ${p === page
+                          ? 'bg-rose-500 text-white shadow-sm shadow-rose-200'
+                          : 'bg-white border border-gray-200 text-gray-600 hover:border-rose-300 hover:text-rose-500'
+                        }`}>
+                      {p}
+                    </Link>
+                  )
+                )}
+              {page < totalPages && (
+                <Link href={`/category/${slug}?page=${page + 1}`}
+                  className="px-4 py-2 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-600 hover:border-rose-300 hover:text-rose-500 transition-colors shadow-sm">
+                  下一页 →
+                </Link>
+              )}
+            </div>
+          )}
+          {totalPages > 1 && (
+            <p className="text-center text-xs text-gray-400 mt-3">
+              第 {page} / {totalPages} 页 · 共 {total} 部
+            </p>
+          )}
         </>
       )}
     </div>
