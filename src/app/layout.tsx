@@ -8,9 +8,21 @@ import AdTopBanner from '@/components/AdTopBanner'
 const notoSansSC = Noto_Sans_SC({ subsets: ['latin'], weight: ['400', '500', '700'] })
 
 export const metadata: Metadata = {
-  title: 'MiniDrama - Free Chinese Short Dramas Online | 免费短剧在线看',
-  description: 'Watch free Chinese short dramas online. Best collection of romance, historical, and modern dramas. 免费在线观看中文短剧，霸总、古装、都市爱情短剧大全。',
-  keywords: 'short drama, Chinese drama, 短剧, 免费短剧, mini drama, online drama',
+  title: { default: 'MiniDrama - 免费短剧在线看 | Free Chinese Short Dramas', template: '%s | MiniDrama' },
+  description: '免费在线观看中文短剧，爱情、古装、都市、悬疑短剧大全。Watch free Chinese short dramas online — romance, historical, modern & suspense.',
+  keywords: '短剧, 免费短剧, 短剧在线看, 爱情短剧, 古装短剧, 都市短剧, short drama, Chinese drama, mini drama, free drama',
+  metadataBase: new URL('https://www.minidramawatch.com'),
+  alternates: { canonical: 'https://www.minidramawatch.com' },
+  openGraph: {
+    siteName: 'MiniDrama',
+    type: 'website',
+    locale: 'zh_CN',
+    url: 'https://www.minidramawatch.com',
+    title: 'MiniDrama - 免费短剧在线看',
+    description: '精选爱情·古装·都市·悬疑短剧，免费在线观看。',
+  },
+  twitter: { card: 'summary_large_image', title: 'MiniDrama - 免费短剧在线看' },
+  robots: { index: true, follow: true },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
 import Link from 'next/link'
 import DramaCard from '@/components/DramaCard'
 import AdBanner from '@/components/AdBanner'
@@ -12,6 +13,25 @@ const CATEGORIES: Record<string, { label: string; labelEn: string; emoji: string
   historical: { label: '古装', labelEn: 'Historical', emoji: '🏯', color: 'from-amber-600 to-yellow-500' },
   modern:     { label: '都市', labelEn: 'Modern',     emoji: '🏙️', color: 'from-violet-600 to-purple-400' },
   suspense:   { label: '悬疑', labelEn: 'Suspense',   emoji: '🔍', color: 'from-slate-700 to-blue-600' },
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const cat = CATEGORIES[slug]
+  if (!cat) return {}
+  return {
+    title: `${cat.label}短剧免费看 - MiniDrama | Free ${cat.labelEn} Short Dramas`,
+    description: `免费在线观看${cat.label}短剧大全，最新${cat.label}短剧合集。Watch free ${cat.labelEn.toLowerCase()} Chinese short dramas online on MiniDrama.`,
+    keywords: `${cat.label}短剧, 免费${cat.label}短剧, ${cat.labelEn} short drama, mini drama`,
+    alternates: { canonical: `https://www.minidramawatch.com/category/${slug}` },
+    openGraph: {
+      title: `${cat.label}短剧 - MiniDrama`,
+      description: `免费在线观看${cat.label}短剧，精选合集。`,
+      url: `https://www.minidramawatch.com/category/${slug}`,
+      siteName: 'MiniDrama',
+      type: 'website',
+    },
+  }
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {

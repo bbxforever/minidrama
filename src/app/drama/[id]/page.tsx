@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
 import Link from 'next/link'
 import AdBanner from '@/components/AdBanner'
 import AdSquare from '@/components/AdSquare'
@@ -9,6 +10,32 @@ export const dynamic = 'force-dynamic'
 
 const CATEGORY_LABELS: Record<string, string> = {
   romance: '爱情', historical: '古装', modern: '都市', suspense: '悬疑',
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const drama = await prisma.drama.findUnique({
+    where: { id: parseInt(id) },
+    select: { title: true, titleEn: true, description: true, category: true, coverUrl: true },
+  })
+  if (!drama) return {}
+  const title = `${drama.title}免费在线看 - MiniDrama`
+  const desc = drama.description
+    ?? `免费在线观看${drama.title}全集短剧。Watch ${drama.titleEn ?? drama.title} free online on MiniDrama.`
+  return {
+    title,
+    description: desc,
+    keywords: `${drama.title}, ${drama.title}全集, ${drama.title}免费看, short drama, mini drama`,
+    alternates: { canonical: `https://www.minidramawatch.com/drama/${id}` },
+    openGraph: {
+      title,
+      description: desc,
+      url: `https://www.minidramawatch.com/drama/${id}`,
+      siteName: 'MiniDrama',
+      type: 'video.tv_show',
+      ...(drama.coverUrl ? { images: [{ url: drama.coverUrl, width: 360, height: 640 }] } : {}),
+    },
+  }
 }
 
 export default async function DramaPage({ params }: { params: Promise<{ id: string }> }) {
