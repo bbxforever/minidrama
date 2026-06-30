@@ -20,15 +20,18 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
   const { page: pageStr } = await searchParams
   const page = Math.max(1, parseInt(pageStr ?? '1') || 1)
 
+  const where = { episodes: { some: {} } }
+
   const [dramas, total, categoryCounts] = await Promise.all([
     prisma.drama.findMany({
+      where,
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
       orderBy: { updatedAt: 'desc' },
       include: { _count: { select: { episodes: true } } },
     }),
-    prisma.drama.count(),
-    prisma.drama.groupBy({ by: ['category'], _count: { id: true } }),
+    prisma.drama.count({ where }),
+    prisma.drama.groupBy({ by: ['category'], _count: { id: true }, where }),
   ])
 
   const totalPages = Math.ceil(total / PAGE_SIZE)
