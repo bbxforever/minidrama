@@ -48,7 +48,9 @@ export async function GET(req: NextRequest) {
       ])
 
       // 更新频道描述和封面（只在字段为空时覆盖，避免覆盖手动填写的内容）
-      const dramaUpdate: Record<string, unknown> = { updatedAt: new Date() }
+      // 注意：不在这里无条件写 updatedAt —— 只有真正新增剧集时才应刷新，
+      // 否则 sitemap 的 lastmod 会失真，让 Google 误以为内容天天在变
+      const dramaUpdate: Record<string, unknown> = {}
       if (channelInfo?.description && !drama.description) {
         dramaUpdate.description = channelInfo.description.slice(0, 1000)
       }
@@ -57,13 +59,22 @@ export async function GET(req: NextRequest) {
       }
 
       if (!videos.length) {
-        await prisma.drama.update({ where: { id: drama.id }, data: dramaUpdate })
+        if (Object.keys(dramaUpdate).length) {
+          await prisma.drama.update({ where: { id: drama.id }, data: dramaUpdate })
+        }
         results.push({ title: drama.title, synced: 0 })
         continue
       }
 
       const videoIds = videos.map((v: { id: { videoId: string } }) => v.id.videoId)
       const details = await fetchVideoDetails(videoIds)
+
+      // 先查哪些 videoId 已经入库，剩下的才是真正新增的
+      const existingEpisodes = await prisma.episode.findMany({
+        where: { youtubeId: { in: videoIds } },
+        select: { youtubeId: true },
+      })
+      const existingYoutubeIds = new Set(existingEpisodes.map(e => e.youtubeId))
 
       let synced = 0
       for (let i = 0; i < details.length; i++) {
@@ -79,10 +90,14 @@ export async function GET(req: NextRequest) {
           },
           update: {},
         })
-        synced++
+        if (!existingYoutubeIds.has(v.id)) synced++
       }
 
-      await prisma.drama.update({ where: { id: drama.id }, data: dramaUpdate })
+      // 只有真正同步到新集数，或有资料更新时，才刷新 updatedAt
+      if (synced > 0) dramaUpdate.updatedAt = new Date()
+      if (Object.keys(dramaUpdate).length) {
+        await prisma.drama.update({ where: { id: drama.id }, data: dramaUpdate })
+      }
       results.push({ title: drama.title, synced })
     } catch (e) {
       results.push({ title: drama.title, synced: 0, error: String(e) })
